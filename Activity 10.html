@@ -1,0 +1,259 @@
+---
+title: "STAT184Activity10"
+subtitle: "Responses to Assigned Questions"
+author: Michael Nichols
+date: "November 20, 2024" 
+format: html
+editor: visual
+self-contained: true
+---
+
+```{r}
+## dependencies
+library(ggplot2)
+```
+
+## **Question 1**
+
+Your task for this question is to simply plot the below function and include the plot in your submission document. The code for the plot is already provided for you. You need not do any additional coding to create this plot.
+
+**Set the options in your code chunk in such a way that only the plot will appear in your rendered document (i.e., the code used to make the plot should not appear).**
+
+Consider the function (h(x) = \big[\cos(4x)+\tan(0.5x)\big]\^4).
+
+Plot (h(x)) over (x \in \[0,1\]).
+
+```{r, echo=FALSE}
+# Defining the function
+myFunction <- function(x){
+  y <- (cos(4*x) + tan(0.5*x))^4
+  return(y)
+}
+
+# Plotting the function
+library(ggplot2)
+ggplot() +
+  stat_function(
+    fun = myFunction,
+    xlim = c(0, 1),
+    n = 1000
+  ) +
+  theme_bw() +
+  labs(
+    x = "x",
+    y = "h(x)"
+  )
+```
+
+## **Question 2**
+
+For this question, you are to recreate a plot (any plot of your choice) that you have previously made and submitted for this class.
+
+You will copy and paste the code you have already written into a code chunk within your Quarto document.
+
+Set the options in your code chunk such that both the code and the output (your plot) are included in your document.
+
+```{r}
+# Define the collatz function
+collatz <- function(n) {
+stopping_time <- 0
+
+while (n > 1) {
+if (n %% 2 == 0) {
+n <- n / 2
+} else {
+n <- 3 * n + 1
+}
+stopping_time <- stopping_time + 1
+}
+
+return(stopping_time)
+}
+
+# Use Vectorize to apply the collatz function to a range of numbers
+collatz_vectorized <- Vectorize(collatz)
+
+# Generate a range of numbers for testing
+numbers <- 1:1000
+
+# Use sapply to calculate the stopping times for each number
+stopping_times <- sapply(numbers, collatz_vectorized)
+
+# Create a histogram of the stopping times
+hist(stopping_times, main = "Distribution of Collatz Stopping Times",
+xlab = "Stopping Time", ylab = "Frequency", col = "lightblue", border = "black")
+
+```
+
+## **Question 3**
+
+The data set for this question contains records of tortilla prices in México from 2007 to 2024.^[1](https://inst-fs-iad-prod.inscloudgate.net/files/71c0b008-4487-4caa-a94d-d2cdefa27000/quarto_hwk.html?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MzIxMzUwOTgsInVzZXJfaWQiOiIxMDUwMDAwMDAwNjk4ODM5OCIsInJlc291cmNlIjoiL2ZpbGVzLzcxYzBiMDA4LTQ0ODctNGNhYS1hOTRkLWQyY2RlZmEyNzAwMC9xdWFydG9faHdrLmh0bWwiLCJqdGkiOiI4ZGE3NGI0Zi04MDhkLTRmZjEtOTEzNi0zNWRlMWJjYTk4M2UiLCJob3N0IjoicHN1Lmluc3RydWN0dXJlLmNvbSIsIm9yaWdpbmFsX3VybCI6Imh0dHBzOi8vYTEwNTAtMTcwMzA4MDYwLmNsdXN0ZXI1Mi5jYW52YXMtdXNlci1jb250ZW50LmNvbS9jb3Vyc2VzLzEwNTB-MjM1MDAxNy9maWxlcy8xMDUwfjE3MDMwODA2MC9jb3Vyc2UlMjBmaWxlcy9VcGxvYWRlZCUyME1lZGlhL3F1YXJ0b19od2suaHRtbD9jb250ZXh0X2lkPTEwNTB-MjM1MDAxN1x1MDAyNmNvbnRleHRfdHlwZT1Db3Vyc2VcdTAwMjZkb3dubG9hZD0xXHUwMDI2aWQ9MTA1MDAwMDAxNzAzMDgwNjBcdTAwMjZpbmxpbmU9MVx1MDAyNm5vX2NhY2hlPXRydWVcdTAwMjZyZWRpcmVjdD10cnVlIiwiZXhwIjoxNzMyMjIxNDk4fQ.YsePoNfbonUs9JKIuZwLsF61guvwg7-36-QgAVrPx3RacRtUtabT00Sh5gZqDJtFedGSnPup20JekKjq7-r3zg#fn1)^ The prices are per kilogram and in Mexican pesos.
+
+The data have been subsetted to include only the six states that border the United States; namely,
+
+-   Baja California
+
+-   Sonora
+
+-   Chihuahua
+
+-   Coahuila
+
+-   Nuevo León
+
+-   Tamaulipas
+
+These (subsetted) data are contained within the file `tortilla_dat.csv`, which has been provided for you.
+
+Requirements:
+
+1.  You must download and read in the data directly from the file. Recall that there is a specific way you need to do this so that `R` and Quarto know where the file can be found.
+
+2.  Include at least one comment within each code chunk explaining why it was included.
+
+3.  Set the options for each code chunk such that, for each plot/output, both your code and the output are included within your rendered document.
+
+4.  Clearly label your work for each of the following tasks in your document.
+
+### **Your tasks.**
+
+\(\textbf{(a).}\) For the year 2007, find the average price of tortillas across all of these 6 states together.
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+
+# Read the data
+tortilla_data <- read.csv("C:/Users/mjnic/Downloads/tortilla_data.csv")
+
+# Filter data for 2007 and calculate the average price across all states
+avg_price_2007 <- tortilla_data %>%
+  filter(year == 2007) %>%
+  summarise(Average_Price = mean(price))
+
+# Print result
+avg_price_2007
+```
+
+\(\textbf{(b).}\) For the year 2024, find the average price of tortillas across all of these 6 states together.
+
+```{r}
+# Filter data for 2024 and calculate the average price across all states
+avg_price_2024 <- tortilla_data %>%
+  filter(year == 2024) %>%
+  summarise(Average_Price = mean(price))
+
+# Print result
+avg_price_2024
+
+```
+
+\(\textbf{(c).}\) Find the percent change in the average price of tortillas across all six states together from the year 2007 to 2024.
+
+```{r}
+# Calculate the percent change
+percent_change <- ((avg_price_2024$Average_Price - avg_price_2007$Average_Price) / avg_price_2007$Average_Price) * 100
+
+# Print result
+percent_change
+
+```
+
+\(\textbf{(d).}\) Make a plot that shows the average price of tortillas (across all six states together) each year from the years 2007 to 2024. Add an appropriate **title** for this figure using Quarto.
+
+```{r}
+# Calculate yearly averages and plot
+yearly_avg <- tortilla_data %>%
+  group_by(year) %>%
+  summarise(Average_Price = mean(price))
+
+# Plot yearly average prices
+library(ggplot2)
+ggplot(yearly_avg, aes(x = year, y = Average_Price)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(
+    title = "Average Price of Tortillas (2007–2024)",
+    x = "Year",
+    y = "Average Price (MXN)"
+  )
+
+```
+
+\(\textbf{(e).}\) For the year 2016, provide summary statistics for each of the six states’ price of tortillas. Make a table of the average price of tortillas in each state in 2016. Add a **title** for this table using Quarto. Also make side-by-side boxplots for each state in 2016. Add an appropriate **title and caption** for this figure using Quarto.
+
+```{r}
+# Filter data for 2016 and calculate summary statistics
+summary_2016 <- tortilla_data %>%
+  filter(year == 2016) %>%
+  group_by(state) %>%
+  summarise(
+    Average = mean(price),
+    Min = min(price),
+    Max = max(price),
+    Median = median(price),
+    SD = sd(price)
+  )
+
+# Display summary statistics
+summary_2016
+
+# Table of average prices in 2016
+table_2016 <- tortilla_data %>%
+  filter(year == 2016) %>%
+  group_by(state) %>%
+  summarise(Average_Price = mean(price))
+
+# Display table
+table_2016
+
+# Create side-by-side boxplots
+ggplot(filter(tortilla_data, year == 2016), aes(x = state, y = price)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(
+    title = "Tortilla Prices by State in 2016",
+    x = "State",
+    y = "Price (MXN)",
+    caption = "Data source: Provided CSV file."
+  )
+
+```
+
+\(\textbf{(f).}\) For the state of Nuevo León, make an overlapp
+
+```{r}
+# Filter data for Nuevo León and plot by store type
+nuevo_leon_data <- tortilla_data %>%
+  filter(state == "Nuevo León")
+
+ggplot(nuevo_leon_data, aes(x = year, y = price, color = storeType)) +
+  geom_line() +
+  geom_point() +
+  theme_minimal() +
+  labs(
+    title = "Nuevo León Tortilla Prices by Store Type (2007–2024)",
+    x = "Year",
+    y = "Price (MXN)",
+    caption = "Comparison of prices between small businesses and large corporations."
+  )
+
+```
+
+ing plot of the price of tortillas each year from 2007 to 2024 based on store type (i.e., small businesses vs. large corporations). Comment on your findings. Add an appropriate **title and caption** for this figure using Quarto.
+
+\(\textbf{(g).}\) Include a picture of a tortilla. Add a caption in which you cite the source from which the picture originated.
+
+```{r}
+![Tortilla](https://upload.wikimedia.org/wikipedia/commons/a/a6/Tortilla.jpg)
+
+*Source: Wikimedia Commons*
+
+```
+
+\(\textbf{(h).}\) Somewhere in your work, include a footnote citing the source of this data, with a link to the Kaggle site from which this data set was downloaded (as provided below in a similar footnote).
+
+## **Footnotes**
+
+1.  Rick Chavelas via Kaggle at https://www.kaggle.com/datasets/richave/tortilla-prices-in-mexico[↩︎](#fnref1)
